@@ -39,7 +39,7 @@ export default async function HomePage() {
 
       <h3 className="text-2xl font-semibold mb-2">Erfaring</h3>
       <ul className="space-y-2">
-        {person.experiences?.map((exp: any, i: number) => (
+        {person.experiences?.map((exp: Record<string, any>, i: number) => (
           <li key={i} className="border-b pb-2">
             <strong>{exp.role}</strong> @ {exp.company}  
             <br />
