@@ -13,6 +13,9 @@ type Person = {
   name: string
   title: string
   bio: string
+  email?: string
+  phone?: string
+  location?: string
   profileImage?: {
     asset: {
       url: string
@@ -26,6 +29,9 @@ const query = `
     name,
     title,
     bio,
+    email,
+    phone,
+    location,
     profileImage {
       asset->{
         url
@@ -45,21 +51,35 @@ export default async function HomePage() {
   const person: Person = await sanity.fetch(query)
 
   return (
-    <main className="p-6 max-w-4xl mx-auto font-sans grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
+    <main className="p-6 max-w-5xl mx-auto font-sans grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
+      
       {/* Venstreside: Profil */}
       <aside className="bg-pink-100 p-6 rounded-xl flex flex-col items-center text-center md:items-start md:text-left">
         {person.profileImage?.asset?.url && (
-        <div className="w-40 h-40 relative rounded-full overflow-hidden mb-8">
-  <Image
-    src={person.profileImage.asset.url}
-    alt={person.name}
-    fill
-    className="object-cover"
-  />
-</div>
+          <div className="w-40 h-40 relative rounded-full overflow-hidden mb-4">
+            <Image
+              src={person.profileImage.asset.url}
+              alt={person.name}
+              fill
+              className="object-cover"
+            />
+          </div>
         )}
         <h1 className="text-2xl font-bold">{person.name}</h1>
         <h2 className="text-lg text-gray-700">{person.title}</h2>
+
+        {person.email && (
+          <p className="mt-2 text-sm text-blue-800 break-words">
+            {person.email}
+          </p>
+        )}
+        {person.phone && (
+          <p className="text-sm text-gray-800">{person.phone}</p>
+        )}
+        {person.location && (
+          <p className="text-sm text-gray-600 italic">{person.location}</p>
+        )}
+
         <p className="mt-4 text-sm text-gray-800">{person.bio}</p>
       </aside>
 
