@@ -1,4 +1,25 @@
 import { sanity } from '../../lib/sanity'
+import Image from 'next/image'
+
+type Experience = {
+  company: string
+  role: string
+  startDate: string
+  endDate?: string
+  isCurrent?: boolean
+}
+
+type Person = {
+  name: string
+  title: string
+  bio: string
+  profileImage?: {
+    asset: {
+      url: string
+    }
+  }
+  experiences?: Experience[]
+}
 
 const query = `
   *[_type == "person"][0]{
@@ -21,32 +42,39 @@ const query = `
 `
 
 export default async function HomePage() {
-  const person = await sanity.fetch(query)
+  const person: Person = await sanity.fetch(query)
 
   return (
-    <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold mb-2">{person.name}</h1>
-      <h2 className="text-xl text-gray-600 mb-4">{person.title}</h2>
-      <p className="mb-6">{person.bio}</p>
+    <main className="p-6 max-w-4xl mx-auto font-sans grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
+      {/* Venstreside: Profil */}
+      <aside className="bg-pink-100 p-6 rounded-xl flex flex-col items-center text-center md:items-start md:text-left">
+        {person.profileImage?.asset?.url && (
+          <Image
+            src={person.profileImage.asset.url}
+            alt={person.name}
+            width={160}
+            height={160}
+            className="rounded-full object-cover mb-4"
+          />
+        )}
+        <h1 className="text-2xl font-bold">{person.name}</h1>
+        <h2 className="text-lg text-gray-700">{person.title}</h2>
+        <p className="mt-4 text-sm text-gray-800">{person.bio}</p>
+      </aside>
 
-      {person.profileImage?.asset?.url && (
-        <img
-          src={person.profileImage.asset.url}
-          alt={person.name}
-          className="rounded-full w-40 h-40 object-cover mb-8"
-        />
-      )}
-
-      <h3 className="text-2xl font-semibold mb-2">Erfaring</h3>
-      <ul className="space-y-2">
-        {person.experiences?.map((exp: Record<string, any>, i: number) => (
-          <li key={i} className="border-b pb-2">
-            <strong>{exp.role}</strong> @ {exp.company}  
-            <br />
-            ({exp.startDate} – {exp.isCurrent ? 'nå' : exp.endDate})
-          </li>
-        ))}
-      </ul>
+      {/* Høyreside: Erfaring */}
+      <section>
+        <h3 className="text-2xl font-semibold mb-4">Erfaring</h3>
+        <ul className="space-y-4">
+          {person.experiences?.map((exp, i) => (
+            <li key={i} className="border-b pb-2">
+              <strong>{exp.role}</strong> @ {exp.company}
+              <br />
+              ({exp.startDate} – {exp.isCurrent ? 'nå' : exp.endDate})
+            </li>
+          ))}
+        </ul>
+      </section>
     </main>
   )
 }
