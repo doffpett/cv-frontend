@@ -49,13 +49,14 @@ export default async function HomePage() {
       {/* Venstreside: Profil */}
       <aside className="bg-pink-100 p-6 rounded-xl flex flex-col items-center text-center md:items-start md:text-left">
         {person.profileImage?.asset?.url && (
-          <Image
-            src={person.profileImage.asset.url}
-            alt={person.name}
-            width={160}
-            height={160}
-            className="rounded-full object-cover mb-4"
-          />
+        <div className="w-40 h-40 relative rounded-full overflow-hidden mb-8">
+  <Image
+    src={person.profileImage.asset.url}
+    alt={person.name}
+    fill
+    className="object-cover"
+  />
+</div>
         )}
         <h1 className="text-2xl font-bold">{person.name}</h1>
         <h2 className="text-lg text-gray-700">{person.title}</h2>
